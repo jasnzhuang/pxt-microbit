@@ -35,33 +35,6 @@ namespace pxsim.basic {
 namespace pxsim.control {
     export var inBackground = thread.runInBackground;
 
-    export function createBuffer(sz: number) {
-        return pxsim.BufferMethods.createBuffer(sz)
-    }
-
-    export function reset() {
-        const cb = getResume();
-        pxsim.runtime.restart();
-    }
-
-    export function waitMicros(micros: number) {
-        // TODO
-    }
-
-    export function deviceName(): string {
-        let b = board();
-        return b && b.id
-            ? b.id.slice(0, 4)
-            : "abcd";
-    }
-
-    export function deviceSerialNumber(): number {
-        let b = board();
-        return parseInt(b && b.id
-            ? b.id.slice(1)
-            : "42");
-    }
-
     export function onEvent(id: number, evid: number, handler: RefAction) {
         if (id == DAL.MICROBIT_ID_BUTTON_AB) {
             const b = board().buttonPairState;
@@ -73,11 +46,6 @@ namespace pxsim.control {
         pxtcore.registerWithDal(id, evid, handler)
     }
 
-    export function raiseEvent(id: number, evid: number, mode: number) {
-        // TODO mode?
-        board().bus.queue(id, evid)
-    }
-
     export function eventTimestamp() {
         return board().bus.getLastEventTime()
     }
@@ -87,21 +55,7 @@ namespace pxsim.control {
     }
 }
 
-namespace pxsim.pxtcore {
-    export function registerWithDal(id: number, evid: number, handler: RefAction) {
-        board().bus.listen(id, evid, handler);
-    }
-}
-
 namespace pxsim.input {
-    export function runningTime(): number {
-        return runtime.runningTime();
-    }
-
-    export function runningTimeMicros(): number {
-        return runtime.runningTimeUs();
-    }
-
     export function calibrateCompass() {
         // device calibrates...
     }
@@ -129,6 +83,10 @@ namespace pxsim.pins {
     export function spiWrite(value: number): number {
         // TODO
         return 0;
+    }
+
+    export function spiTransfer(cmd: RefBuffer, resp: RefBuffer): void {
+        // TODO
     }
 
     export function spiFrequency(f: number): void {
@@ -214,7 +172,7 @@ namespace pxsim.bluetooth {
     }
 
     export function uartReadBuffer(): RefBuffer {
-        return pins.createBuffer(0);        
+        return pins.createBuffer(0);
     }
 
     export function uartReadUntil(del: string): string {
@@ -236,3 +194,31 @@ namespace pxsim.bluetooth {
     export function setTransmitPower(power: number) { }
 }
 
+namespace pxsim.light {
+
+    export function sendWS2812Buffer(buffer: RefBuffer, pin: number) {
+        pxsim.sendBufferAsm(buffer, pin)
+    }
+
+    export function sendWS2812BufferWithBrightness(buffer: RefBuffer, pin: number, brightness: number) {
+        const clone = new RefBuffer(new Uint8Array(buffer.data))
+        const data = clone.data;
+        for(let i =0; i < data.length; ++i) {
+            data[i] = (data[i] * brightness) >> 8;
+        }
+        pxsim.sendBufferAsm(clone, pin)
+    }
+
+    export function setMode(pin: number, mode: number) {
+        const lp = neopixelState(pin);
+        if (!lp) return;
+        lp.mode = mode & 0xff;
+    }
+
+    export function setMatrixWidth(pin: number, width: number) {
+        const lp = neopixelState(pin);
+        if (!lp) return;
+        lp.width = width;
+    }
+
+}

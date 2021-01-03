@@ -14,7 +14,7 @@ namespace bluetooth {
     BLEHF2Service* pHF2 = NULL;
 
     //%
-    void __log(String msg) {
+    void __log(int priority, String msg) {
         if (NULL == pHF2)
             pHF2 = new BLEHF2Service(*uBit.ble);
         pHF2->sendSerial(msg->getUTF8Data(), msg->getUTF8Size(), false);
@@ -125,19 +125,18 @@ namespace bluetooth {
         startUartService();
         int bytes = uart->rxBufferedSize();
         auto buffer = mkBuffer(NULL, bytes);
+        auto res = buffer;
+        registerGCObj(buffer);
         int read = uart->read(buffer->data, buffer->length);
         // read failed
         if (read < 0) {
-            decrRC(buffer);
-            return mkBuffer(NULL, 0);
+            res = mkBuffer(NULL, 0);
+        } else if (read != buffer->length) {
+            // could not fill the buffer
+            res = mkBuffer(buffer->data, read); 
         }
-        // could not fill the buffer
-        if (read != buffer->length) {
-            auto tmp = mkBuffer(buffer->data, read); 
-            decrRC(buffer); 
-            buffer = tmp;
-        }
-        return buffer;
+        unregisterGCObj(buffer);
+        return res;
     }
 
     /**

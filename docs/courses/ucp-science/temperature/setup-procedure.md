@@ -10,6 +10,17 @@
 
 >Program the @boardname@s. Experiment with different data collection scenarios. 
 
+### ~ hint
+
+#### Direct sunlight and shade experiment
+
+Watch this video about an experiment using the temperature sensor to see what effect
+a sun shade has on keeping your car cooler.
+
+https://youtu.be/pHDYsy6xyE4
+
+### ~
+
 ## Code
 
 This project will start with one @boardname@ and program it to use the @boardname@’s temperature sensor to collect and display the current temperature in Celsius on the @boardname@’s LED display. The data collected can be recorded manually on a paper with a pencil.
@@ -54,13 +65,11 @@ basic.forever(() => {
 
 **Variation:** Instead of using a ``||basic:forever||`` loop, the **A** and **B** buttons could be programmed to display the temperature in either Celsius or Fahrenheit.
 
-### Temperature project 2 - @boardname@ Windows 10 MakeCode app and a USB connection
+### Temperature project 2 - MakeCode and a USB connection
 
-The Windows 10 MakeCode app allows data to directly read serial data from your @boardname@ for data logging and other fun experiments. This allow the collection of data in real time which can be downloaded in a CSV file for additional analysis in a spreadsheet.
+MakeCode allows data to directly read serial data from your @boardname@ for data logging and other fun experiments. This allow the collection of data in real time which can be downloaded in a CSV file for additional analysis in a spreadsheet.
 
-**Get the app:** The Windows 10 MakeCode app can be downloaded here: https://www.microsoft.com/store/apps/9PJC7SV48LCX 
-
-With the program downloaded from the MakeCode app to the @boardname@ and the USB cable left connected and using the ``||serial:serial write value||`` block from the ``|serial:Serial||`` toolbox in the **Advanced** tool section.
+With the program downloaded from MakeCode to the @boardname@ and the USB cable left connected and using the ``||serial:serial write value||`` block from the ``|serial:Serial||`` toolbox in the **Advanced** tool section.
 
 ```blocks
 basic.forever(() => {
@@ -102,7 +111,7 @@ basic.forever(() => {
 
 In the starting of the code the title is displayed, radio group `99` is setup, and the initial ``temperature`` variable is set to `0`.
 
-In the ``||radio:on received number||`` event, the temperature is received from sending the @boardname@ radio. The receive temperature is then displayed on the LED display. This is repeated whenever a radio signal is received.
+In the ``||radio:on received number||`` event, the temperature is received from sending the @boardname@ radio. The received temperature is then displayed on the LED display. This is repeated whenever a radio signal is received.
 
 ```blocks
 let temperature = 0

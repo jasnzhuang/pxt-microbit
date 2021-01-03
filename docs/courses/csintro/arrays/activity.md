@@ -6,34 +6,31 @@ Create an array of words that can be used as part of a charades-type game.
 This activity is based on a very popular phone app invented by Ellen DeGeneres (https://bits.blogs.nytimes.com/2013/05/03/ellen-degeneres-iphone-game/).
 
 ![Heads up game](/static/courses/csintro/arrays/headband-charades.png)
-	
-* Create a new variable and give it a name like arrayWords.
-* Insert a 'set' variable block into the 'on start' block. 
-* Change the default variable name to this new variable name.
-* From the Array Toolbox drawer, drag an 'array of' block to the coding workspace.
-* Attach this array block to the end of the 'set' variable block. 
+
+* From the Arrays Toolbox drawer, drag a 'set text_list to array of' block into the 'on start' block.
+* You can use the variable name of text_list or rename it to something more meaningful like arrayWords.
 
 ```blocks
-let arrayWords = ["", ""]
+let arrayWords = ["a", "b", "c"]
 ```
 
 Notice that the array comes with 2 string blocks. We’ll want more for our charades game.
 
 * Click on the **(+)** symbol at the end of the 'array of' block.
 * Add as many values (elements) as you'd like to the array block by continuing to click on the **(+)**.
-* For now, we’ll add 4 more values for a total of 6 values.
+* For now, we’ll add 3 more values for a total of 6 values.
 
 ```blocks
-let arrayWords = ["", "", "", "", "", "", ""]
+let arrayWords = ["a", "b", "c", "", "", ""]
 ```
 * Fill each string with one word. Choose words that will be fun for a game of charades. Example:
 
-```blocks	
+```blocks
 let arrayWords = ["cat", "guitar", "flashlight", "cupcake", "tree", "frisbee"]
 ```
 
 Now, we need a way to access one word at a time from this array of words.
-* We can use the 'show string' block from the Basic Toolbox drawer, and the 'on screen up' event handler from the Input Toolbox drawer (this is a drop-down menu choice of the 'on shake' block) to tell the micro:bit to display a word when we tilt the micro:bit up. 
+* We can use the 'show string' block from the Basic Toolbox drawer, and the 'on screen up' event handler from the Input Toolbox drawer (this is a drop-down menu choice of the 'on shake' block) to tell the micro:bit to display a word when we tilt the micro:bit up.
 * For this version, we’ll display the words one at a time in the order they were first placed into the array.
 * We’ll use the index of the array to keep track of what word to display at any given time, so you'll need to create an 'index' variable.
 
@@ -86,10 +83,11 @@ input.onGesture(Gesture.ScreenDown, () => {
     index += 1
 })
 ```
+
 We have a limited number of elements in our array, so to avoid an error, we need to check and make sure we are not already at the end of the array before we change the index.
  
 * Under the Arrays Toolbox drawer, drag out a 'length of' block. The 'length of' block returns the number of items (elements) in an array. For our array, the length of block will return the value 6.
-* But because computer programmers start counting at zero, the index of the final (6th) element is 5. 
+* But because computer programmers start counting at zero, the index of the final (6th) element is 5.
  
 Some pseudocode for our algorithm logic:
 * When the player places the micro:bit screen down:
@@ -98,13 +96,15 @@ Some pseudocode for our algorithm logic:
 **Then:** change the value of the index by one,<br/>
 **Else:** indicate that it is the end of the game.
 
-## ~hint
-**Array bounds**
+### ~hint
+
+#### Array bounds
 
 Our array has a length 6, so this will mean that as long as the current value of the index is less than 5, we will change the array by one.
 
 Using ‘less than the length of the array minus one’ instead of the actual numbers for our array makes this code more flexible and easier to maintain. We can easily add more elements to our array and not have to worry about changing numbers elsewhere in the code.
-## ~ 
+
+### ~ 
 
 We can put this all together with an 'if...then...else' block and a 'less than' comparison block from the Logic Toolbox drawer, a subtraction block from the Math Toolbox drawer, and a 'game over' block from the Game Toolbox drawer (located under the Advanced menu).
 
@@ -139,14 +139,16 @@ input.onGesture(Gesture.ScreenDown, () => {
 ```
 
 ## Game Play
+
 There are different ways you can play charades with our program.  Here is one way you can play with a group of friends.
 
-* With the micro:bit on and held so Player A cannot see the screen, another player starts the program to see the first word. 
+* With the micro:bit on and held so Player A cannot see the screen, another player starts the program to see the first word.
 * The other players act out this word charades-style for Player A to guess.
-* When Player A guesses correctly or decides to pass on this word, a player places the micro:bit screen down. 
+* When Player A guesses correctly or decides to pass on this word, a player places the micro:bit screen down.
 * When ready for the next word, a player turns the micro:bit screen up. Play continues until all the words in the array have been used.
  
 ## Mod this!
+
 * Add a headband to hold the micro:bit on the Players' foreheads (using cardboard, paper, rubber bands, etc.)
 * Add a way to keep score
 * Keep track of the number of correct guesses and passes
@@ -197,15 +199,15 @@ Review the use of the random block in the Math category.
 * Create a block that will plot a single dot at a random location on the screen by choosing a random number from 0 to 4 for the x axis and a random number from 0 to 4 for the y axis.
 
 ```blocks
-led.plot(Math.randomRange(0, 5), Math.randomRange(0, 5))
+led.plot(randint(0, 4), randint(0, 4))
 ```
 
 Next, let’s create a loop that will repeat the above code five times, for a constellation with five stars.
 
 ```blocks
 for (let index = 0; index <= 4; index++) {
-    led.plot(Math.randomRange(0, 5), Math.randomRange(0, 5))
-    }
+    led.plot(randint(0, 4), randint(0, 4))
+}
 ```
 
 Note that to keep things simple we don’t check for duplicates, so it’s possible you may end up with fewer than five visible stars. That’s okay.
@@ -233,13 +235,13 @@ To fix this, we need to do a little math by subtracting 1 from whatever the valu
 let list = [5, 2, 1, 3, 4]
 
 for (let index = 0; index < list[0] - 1; index++) {
-    led.plot(Math.randomRange(0, 5), Math.randomRange(0, 5))
+    led.plot(randint(0, 4), randint(0, 4))
 }
 ```
 
 The above code takes the first value in the array and creates that many stars at random locations. Now, all we need to do is iterate through the entire array and do the same thing for each of the values. We will put the above code inside another loop that will run the same number of times as the length of the array (in this case, 5). You should also use a 'pause' block and a 'clear screen' block in between each constellation.
 
-Finally, you might attach the code that shows the constellations to an 'on button A pressed' event handler. 
+Finally, you might attach the code that shows the constellations to an 'on button A pressed' event handler.
 
 Here is the complete program.
 
@@ -248,7 +250,7 @@ let list: number[] = []
 input.onButtonPressed(Button.A, () => {
     for (let i = 0; i <= list.length - 1; i++) {
         for (let j = 0; j <= list[i] - 1; j++) {
-            led.plot(Math.randomRange(0, 5), Math.randomRange(0, 5))
+            led.plot(randint(0, 4), randint(0, 4))
         }
         basic.pause(1000)
         basic.clearScreen()

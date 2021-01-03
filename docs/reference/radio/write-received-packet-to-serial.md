@@ -9,6 +9,14 @@ radio.writeReceivedPacketToSerial();
 This should be called within a callback to
 [on data packet received](/reference/radio/on-data-packet-received).
 
+### ~ hint
+
+#### Deprecated
+
+This API has been deprecated! Use [serial write value](/reference/serial/write-value) instead.
+
+### ~
+
 ## Data received format
 
 The format for received data when these send functions are used:
@@ -18,6 +26,8 @@ The format for received data when these send functions are used:
 - [send string](/reference/radio/send-string): ```{t:MicrobitTimeAlive,s:SerialNumber,n:"Text"}```
 
 ### ~hint
+
+#### Default serial number
 
 The serial number value sent in the packet is set to `0` unless transmission of the serial number is enabled with ``||radio:radio set transmit serial number||``.
 
@@ -30,22 +40,26 @@ the second @boardname@), this program sends temperature data to the
 serial port.
 
 ```blocks
-input.onButtonPressed(Button.A, () => {
-    radio.sendNumber(input.temperature());
-    radio.sendValue("temperature", input.temperature());
-    radio.sendString("It's warm now");
-
-
-});
+input.onButtonPressed(Button.A, function () {
+    radio.sendNumber(input.temperature())
+    radio.sendValue("temp", input.temperature())
+    radio.sendString("It's warm now")
+})
 radio.onReceivedNumber(function (receivedNumber) {
-    radio.writeReceivedPacketToSerial();
-});
+    radio.writeReceivedPacketToSerial()
+})
+radio.onReceivedValue(function (name, value) {
+    radio.writeReceivedPacketToSerial()
+})
+radio.onReceivedString(function (receivedString) {
+    radio.writeReceivedPacketToSerial()
+})
 ```
 Sample output to serial when ``A`` button pressed:
 
 ```json
 {"t":323,"s":0,"v":27}
-{"t":325,"s":0,"n":"temperature","v":27}
+{"t":325,"s":0,"n":"temp","v":27}
 {"t":326,"s":0,"n":"It's warm now"}
 ```
 

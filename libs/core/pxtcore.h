@@ -14,12 +14,22 @@ void debuglog(const char *format, ...);
 #define xmalloc malloc
 #define xfree free
 
-#if CONFIG_ENABLED(MICROBIT_BLE_ENABLED)
-#define GC_BLOCK_SIZE 256
+#define GC_MAX_ALLOC_SIZE 9000
+
+#define NON_GC_HEAP_RESERVATION 1024
+
+#ifdef CODAL_CONFIG_H
+#define MICROBIT_CODAL 1
 #else
-#define GC_BLOCK_SIZE 1000
+#define MICROBIT_CODAL 0
+#define GC_BLOCK_SIZE 256
 #endif
 
+#if !MICROBIT_CODAL
+#undef DMESG
 #define DMESG NOLOG
+#endif
+
+#undef BYTES_TO_WORDS
 
 #endif

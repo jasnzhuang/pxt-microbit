@@ -11,7 +11,9 @@
         "libs/devices",
         "libs/bluetooth",
         "libs/servo",
-        "libs/radio-broadcast"
+        "libs/radio-broadcast",
+        "libs/microphone",
+        "libs/settings"
     ],
     "cloud": {
         "workspace": false,
@@ -23,7 +25,10 @@
         "preferredPackages": [
             "Microsoft/pxt-neopixel"
         ],
-        "githubPackages": true
+        "githubPackages": true,
+        "cloudProviders": {
+            "github": {}
+        }
     },
     "compile": {
         "isNative": false,
@@ -40,6 +45,9 @@
         "utf8": false,
         "gc": true,
         "imageRefTag": 9,
+        "shimRenames": {
+            "sendBufferAsm": "light::sendWS2812Buffer"
+        },
         "patches": {
             "0.0.0 - 1.0.0": [
                 {
@@ -88,6 +96,30 @@
                         "device_print_message.message": "text"
                     }
                 }
+            ],
+            "0.0.0 - 1.4.12": [
+                {
+                    "type": "api",
+                    "map": {
+                        "DisplayMode\\s*\\.\\s*BackAndWhite": "DisplayMode.BlackAndWhite"
+                    }
+                }
+            ],
+            "0.0.0 - 3.1.10": [
+                {
+                    "type": "package",
+                    "map": {
+                        "pxt-microbit-v2-extension": "microphone"
+                    }
+                }
+            ],
+            "0.0.0 - 3.0.18": [
+                {
+                    "type": "missingPackage",
+                    "map": {
+                        ".*": "microphone"
+                    }
+                }
             ]
         },
         "hidSelectors": [
@@ -101,6 +133,46 @@
         "webUSB": true,
         "useNewFunctions": true
     },
+    "compileService": {
+        "yottaTarget": "bbc-microbit-classic-gcc",
+        "yottaCorePackage": "microbit",
+        "githubCorePackage": "lancaster-university/microbit",
+        "gittag": "v2.2.0-rc6",
+        "serviceId": "microbit",
+        "dockerImage": "pext/yotta:latest"
+    },
+    "multiVariants": [
+        "mbdal",
+        "mbcodal"
+    ],
+    "alwaysMultiVariant" : true,
+    "variants": {
+        "mbdal": {
+            "compile": {},
+            "compileService": {}
+        },
+        "mbcodal": {
+            "compile": {
+                "flashUsableEnd": null,
+                "flashEnd": null
+            },
+            "compileService": {
+                "buildEngine": "codal",
+                "codalTarget": {
+                    "name": "codal-microbit-v2",
+                    "url": "https://github.com/lancaster-university/codal-microbit-v2",
+                    "branch": "v0.2.23",
+                    "type": "git"
+                },
+                "codalBinary": "MICROBIT",
+                "githubCorePackage": "lancaster-university/microbit-v2-samples",
+                "gittag": "v0.2.11",
+                "serviceId": "mbcodal2",
+                "dockerImage": "pext/yotta:latest",
+                "yottaConfigCompatibility": true
+            }
+        }
+    },
     "runtime": {
         "mathBlocks": true,
         "loopsBlocks": true,
@@ -109,6 +181,8 @@
         "textBlocks": true,
         "listsBlocks": true,
         "functionBlocks": true,
+        "breakBlock": true,
+        "continueBlock": true,
         "functionsOptions": {
             "useNewFunctions": true,
             "extraFunctionEditorTypes": [
@@ -117,6 +191,12 @@
                     "label": "LedSprite",
                     "icon": "send",
                     "defaultName": "sprite"
+                },
+                {
+                    "typeName": "Image",
+                    "label": "Image",
+                    "icon": "image outline",
+                    "defaultName": "image"
                 }
             ]
         },
@@ -130,6 +210,12 @@
         "aspectRatio": 1.22,
         "parts": true,
         "partsAspectRatio": 0.69,
+        "messageSimulators": {
+            "jacdac": {
+                "url": "https://microsoft.github.io/jacdac-ts/tools/makecode-sim?webusb=0&parentOrigin=$PARENT_ORIGIN$",
+                "localHostUrl": "http://localhost:8000/tools/makecode-sim?webusb=0&parentOrigin=$PARENT_ORIGIN$"
+            }
+        },
         "boardDefinition": {
             "visual": "microbit",
             "gpioPinBlocks": [
@@ -213,7 +299,11 @@
                 "speaker",
                 "bluetooth",
                 "thermometer",
-                "compass"
+                "compass",
+
+                "builtinspeaker",
+                "microphone",
+                "logotouch"
             ],
             "pinStyles": {
                 "P0": "croc",
@@ -229,14 +319,6 @@
                 0
             ]
         }
-    },
-    "compileService": {
-        "yottaTarget": "bbc-microbit-classic-gcc",
-        "yottaCorePackage": "microbit",
-        "githubCorePackage": "lancaster-university/microbit",
-        "gittag": "pxtgc-0",
-        "serviceId": "microbit",
-        "dockerImage": "pext/yotta:latest"
     },
     "serial": {
         "nameFilter": "^(mbed Serial Port|DAPLink CMSIS-DAP)",
@@ -259,7 +341,7 @@
     },
     "appTheme": {
         "accentColor": "#5C005C",
-        "logoUrl": "https://microbit.org/code/",
+        "logoUrl": "https://microbit.org/",
         "logo": "./static/logo.portrait.white.svg",
         "docsLogo": "./static/logo.square.white.svg",
         "portraitLogo": "./static/logo.square.white.svg",
@@ -271,6 +353,7 @@
         "organizationLogo": "./static/Microsoft-logo_rgb_c-gray-square.png",
         "organizationWideLogo": "./static/Microsoft-logo_rgb_c-white.png",
         "homeScreenHero": "./static/hero.png",
+        "homeScreenHeroGallery": "/tutorials",
         "homeUrl": "https://makecode.microbit.org/",
         "embedUrl": "https://makecode.microbit.org/",
         "shareUrl": "https://makecode.microbit.org/",
@@ -278,6 +361,7 @@
         "termsOfUseUrl": "https://makecode.com/termsofuse",
         "githubUrl": "https://github.com/Microsoft/pxt-microbit",
         "boardName": "micro:bit",
+        "boardNickname": "micro:bit",
         "driveDisplayName": "MICROBIT",
         "appStoreID": "1092687276",
         "mobileSafariDownloadProtocol": "microbithex://?data",
@@ -285,11 +369,14 @@
         "extendEditor": true,
         "extendFieldEditors": true,
         "enableTrace": true,
-        "ignoreDocsErrors": true,
+        "ignoreDocsErrors": false,
+        "errorList": true,
         "experiments": [
+            "autoWebUSBDownload",
             "allowPackageExtensions",
             "instructions",
-            "debugger",
+            "accessibleBlocks",
+            "debugExtensionCode",
             "bluetoothUartConsole",
             "bluetoothPartialFlashing",
             "simScreenshot",
@@ -308,14 +395,6 @@
             {
                 "name": "Reference",
                 "path": "/reference"
-            },
-            {
-                "name": "Blocks",
-                "path": "/blocks"
-            },
-            {
-                "name": "JavaScript",
-                "path": "/javascript"
             },
             {
                 "name": "Hardware",
@@ -390,10 +469,17 @@
                 "path": "/static/mb/device/usb-windows-sendto.jpg"
             }
         ],
+        "hideHomeDetailsVideo": true,
         "invertedMenu": true,
         "coloredToolbox": true,
         "monacoToolbox": true,
         "hasAudio": true,
+        "socialOptions": {
+            "orgTwitterHandle": "MSMakeCode",
+            "hashtags": "MakeCode",
+            "discourse": "https://forum.makecode.com/",
+            "discourseCategory": "micro:bit"
+        },
         "blocklyOptions": {
             "grid": {
                 "spacing": 45,
@@ -412,6 +498,7 @@
             "functions": "#3455DB",
             "arrays": "#E65722"
         },
+        "blocksCollapsing": true,
         "highContrast": true,
         "greenScreen": true,
         "print": true,
@@ -419,6 +506,7 @@
         "availableLocales": [
             "en",
             "ar",
+            "bg",
             "cs",
             "da",
             "de",
@@ -426,13 +514,16 @@
             "es-ES",
             "fi",
             "fr",
+            "he",
             "hu",
             "is",
             "it",
             "ja",
             "ko",
             "nl",
-            "no",
+            "nb",
+            "nn-NO",
+            "pl",
             "pt-BR",
             "pt-PT",
             "ru",
@@ -448,14 +539,42 @@
             "editor.background": "#ecf0f1"
         },
         "browserDbPrefixes": {
-            "1": "v1"
+            "1": "v1",
+            "2": "v2",
+            "3": "v3"
         },
         "editorVersionPaths": {
             "0": "v0"
         },
+        "showProjectSettings": true,
         "scriptManager": true,
+        "debugger": true,
         "simGifTransparent": "rgba(0,0,0,0)",
         "simGifMaxFrames": 44,
-        "simScreenshotMaxUriLength": 300000
-    }
+        "simScreenshotMaxUriLength": 300000,
+        "qrCode": true,
+        "importExtensionFiles": true,
+        "nameProjectFirst": true,
+        "githubEditor": true,
+        "chooseLanguageRestrictionOnNewProject": true,
+        "openProjectNewTab": true,
+        "python": true,
+        "appFlashingTroubleshoot": "/device/windows-app/troubleshoot"
+    },
+    "queryVariants": {
+        "hidemenu": {
+            "appTheme": {
+                "hideMenuBar": true
+            }
+        },
+        "androidapp": {
+            "compile": {
+                "webUSB": false
+            },
+            "appTheme": {
+                "disableBlobObjectDownload": true
+            }
+        }
+    },
+    "uploadDocs": true
 }
